@@ -76,35 +76,37 @@ hist(mistakes, breaks=60, col= "deepskyblue", ylim=c(0, 40))
 ### 3.1
 Is it true that $50$% students made more than $35$ mistakes?
 ```
-
+No
 ```
 Explain your answer below:
 
-
+It's not true because less than a half of values lies to the right of 35
 ### 3.2
 Is it true that most students made no more than $10$ mistakes?
 ```
-
+No
 ```
 Explain your answer below:
 
-
+It's not true because a minority of values lies to the left of 10
 ### 3.3
 Which of the following values is closer to be the median of `mistakes`: $10$, $20$, $30$, $40$?
 ```
-
+30
 ```
 Explain your answer below:
 
-
+About a half of values lies to the right of 30, about a half lies to the left
 ### Problem 4. Exact binomial test
 
 The null hypothesis is that $p=0$ (i.e. no success is possible). In a dataset, there is only one success out of 1 000 000 observations. Will you reject the null hypothesis? 
 ```
-
+No
 ```
 Explain your answer below:
-
+```
+Just one one success out of 1 000 000 observations seems to be not enough amount to reject the null hypothesis.
+```
 
 ## Part 3
 
@@ -119,19 +121,19 @@ $44$, $50$, $42$, $64$, $66$, $42$, $72$, $56$, $72$, $54$, $46$, $48$, $48$, $5
 ### 5.1
 Arrange them in a vector and call it `age`. 
 ```{r}
-
+age <- c(44, 55, 42, 64, 66, 42, 72, 56, 72, 54, 46, 48, 48, 52, 50, 66, 84)
 ```
 
 ### 5.2
 Examine the type of `age` variable (numeric, character, etc).
-```
-
+```{r}
+typeof(age)
 ```
 
 ### 5.3
 Plot the histogram of the vector `age` with $5$ bins. Change its color to any you want. (Use either R basic or ggplot2 style for plotting.)
 ```{r}
-
+hist(age, breaks = 5, col = "blue")
 ```
 
 
@@ -143,12 +145,13 @@ Here is a series of words:
 ### 6.1
 Arrange elements above in a vector and call it `words` 
 ```{r}
-
+words <- c('pie', 'bar', 'bar', 'pie', 'pie', 'bar', 'bar', 'chart')
 ```
 
 ### 6.2
 Calculate the relative frequences of values in `words` measured in percent.
 ```{r}
+prop.table(table(words))*100
 
 ```
 
@@ -172,41 +175,49 @@ Let's assume that the probability for verbs to be used in any position ('in gene
 
 What is your null hypothesis $H_0$ and what is the alternative hypothesis $H_1$?
 ```
-H0: 
-H1: 
+H0: Verbs in the rhyming position are used in the same way as verbs in general, which means that probability for verbs to be used in the rhyming position is 17%
+
+H1: Verbs in the rhyming position are used differently which means that probability for verbs to be used in the rhyming position is not equal 17%
 ```
 
 ### 7.2
 
 Read the dataset [“The last words in verses”](https://raw.githubusercontent.com/LingData2019/LingData2020/master/data/poetry_last_in_lines.csv). Filter out the relevant observations from 1920s, calculate the number of verbs observed in the sample, and the sample size. 
 ```{r}
-
+df <- read.csv("https://raw.githubusercontent.com/LingData2019/LingData2020/master/data/poetry_last_in_lines.csv", sep = "\t")
 ```
 
 ### 7.3
 
 Use an exact binomial test to calculate p-value. 
 ```{r}
+trials <- nrow(df[df$Decade == '1920s',])
+sucsesses <- nrow(df[df$Decade == '1920s' & df$UPoS == 'VERB',])
 
+binom.test(sucsesses, trials, p = 0.17)
 ```
 
 ### 7.4 Interpret results
 
 Give your interpretation of obtained p-value. Answer the initial question: Can we decide that in verses written in 1920s, verbs are used in the rhyming posision more often or less often than expected?
 ```
-
+p-value = 0.2297, p-value > 0,05 => We cannot reject the null hypothesis.
+According to test results we cannot decide that in verses written in 1920s, verbs are used in the rhyming posision more often or less often than expected.
 ```
 
 ### 7.5 
 *(A bonus problem, extra points in evaluation)*.
 Repeat 2.3 for verses written in the 1820s.
 ```{r}
+trials18 <- nrow(df[df$Decade == '1820s',])
+sucsesses18 <- nrow(df[df$Decade == '1820s' & df$UPoS == 'VERB',])
 
+binom.test(sucsesses18, trials18, p = 0.17)
 ```
 
 Write down your general conlusions about data provided for both 1920s and 1820s data.
 ```
-
+Despite the fact that in 1920s experiment probability for verbs to be used in the rhyming posision is higher than in 1820s experiment, in both cases p-value is more than 0,05. So for both experiements we cannot reject the null hypothesis.
 ```
 
 ### Problem 8. One-sample t-test
@@ -219,19 +230,21 @@ t.test(sample, mu = 7725) # mu is a population mean
 ### 8.1
 Write down a two-tailed alternative hypothesis.
 ```
-H1: 
+H1: The population mean of vowel duration in speaker `shg05` does not equal 73 ms (it's less or more than 73).
 ```
 
 ### 8.2
 Perform a one-sample t-test. 
 ```{r}
-
+df2 <- read.csv("https://raw.githubusercontent.com/LingData2019/LingData2020/master/data/icelandic.csv")
+shg05 <- df2[df2$speaker == 'shg05',]
+t.test(shg05$vowel.dur, mu = 73)
 ```
 
 ### 8.3
 Interpret results. 
 ```
-
+p-value = 0.05172, p-value > 0,05, so we cannot reject the null hypothesis.
 ```
 
 #### Supplementary reading
